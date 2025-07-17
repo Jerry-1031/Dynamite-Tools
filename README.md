@@ -1,6 +1,53 @@
 # Dynamite-Tools
 Some useful tools of the fanmade music game Dynamite.
 
+# converter
+
+Convert Maimai charts to Dynamix/Dynamite XML map.
+
+将舞萌 DX 的谱面转为 Dynamix/Dynamite XML 的谱面。
+
+## Usage / 用法
+
+1. 打开 `converter.py`，直接修改其中的谱面内容（注意将 &inote_6= 和第一行谱面分两行写，否则将会识别不出 BPM），并运行该文件；
+2. 运行输出的文件格式为 Dynamaker 谱面，不支持直接导入游玩；请先导入至 [Dynode](https://dyn.iorinn.moe/)，再导出为实机谱面游玩。
+
+## Rules / 映射规则
+
+1-8 号键从右至左映射为 Dym 位置 4.9 至 -0.7（对应实际位置为 5.3 至 -0.3，对应参数可调）。
+
+### Tap
+
+直接转换为NORMAL。
+
+### Hold
+
+转换为 HOLD 和 SUB 对。
+
+### Slide / 星星
+
+转为 NORMAL 和 CHAIN 的组合，初键位转为 NORMAL，之后均为 CHAIN。CHAIN 的间隔为参数 `slide_chain_interval_beats` 可调（默认为 0.125 = 32 分），各个 CHAIN 的位置从初键位到末键位线性均匀变化。
+
++ 直线型（包括 `-` 和所有未指定的 `v, p, q, s, z, w, V, pp, qq, ^`）：CHAIN 从初键位直接滑到末键位，不出屏幕；
++ 圆弧型（`<` 和 `>`）：方向同舞萌谱面规则，若为 <，则：
++ + 初始键位为 1,2,7,8：按键位递减移动；
++ + 初始键位为 3,4,5,6：按键位递增移动。
++ + `>` 与 `<` 相反，初始键位为 1278 则递增移动，为 3456 则递减移动。若出屏幕自动转到另一边。
++ 多段/并发星星：支持解析 *（并发）和 -（串联）连接的复杂星星。
+
+### Break / 绝赞
+
+若某个音符含绝赞，则将该音符复制为 3 份（默认，可在程序中修改）。
+
+### 其他类型
+
+暂不支持。因为没想到合适的转换方法。欢迎反馈。
+
+### BPM 转换
+
+完全支持。欢迎反馈 BUG。  
+若包含多个 BPM 转换，请先导入至 [Dynode](https://dyn.iorinn.moe/)，再导出为实机谱面游玩。
+
 # kps_plot
 
 Script to parse a music game XML map file and plot the real-time Keys-Per-Second (KPS) curve.
